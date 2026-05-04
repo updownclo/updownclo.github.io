@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<style>
+body {
+  background:#050505;
+  color:white;
+  font-family:Arial;
+  margin:0;
+  cursor:crosshair;
+}
+
+/* NAV */
+.nav {
+  position:fixed;
+  top:0;
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  padding:20px 40px;
+  font-size:12px;
+  letter-spacing:2px;
+  background:#050505;
+  z-index:10;
+}
+
+.nav a {
+  color:white;
+  text-decoration:none;
+  margin-left:20px;
+}
+
+/* PRODUCTS */
+.products {
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:60px;
+  padding:140px 120px;
+}
+
+/* PRODUCT */
+.product {
+  text-align:center;
+  position:relative;
+  opacity:0;
+  transform:translateY(40px);
+  animation:fadeUp 1s ease forwards;
+}
+
+.product:nth-child(2) {
+  animation-delay:0.3s;
+}
+
+/* ANIMATION */
+@keyframes fadeUp {
+  to {
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* IMAGE */
+.image-wrapper {
+  position:relative;
+}
+
+.image-wrapper img {
+  width:90%;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.image-wrapper img:hover {
+  transform:scale(1.05);
+}
+
+/* HOVER TEXT */
+.overlay {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  opacity:0;
+  font-size:12px;
+  letter-spacing:3px;
+  transition:0.3s;
+}
+
+.image-wrapper:hover .overlay {
+  opacity:1;
+}
+
+/* TEXT */
+.product p {
+  margin-top:20px;
+  letter-spacing:3px;
+  font-size:13px;
+}
+
+.price {
+  margin-top:10px;
+  font-size:14px;
+  color:#aaa;
+}
+
+/* SIZES */
+.sizes {
+  margin-top:15px;
+}
+
+.sizes span {
+  display:inline-block;
+  border:1px solid #555;
+  padding:8px 12px;
+  margin:4px;
+  font-size:12px;
+  cursor:pointer;
+}
+
+.sizes span:hover,
+.sizes span.active {
+  background:white;
+  color:black;
+}
+
+/* SELECTED */
+.selected {
+  margin-top:10px;
+  font-size:12px;
+  color:#aaa;
+}
+
+/* BUTTON */
+.buy {
+  display:inline-block;
+  margin-top:15px;
+  padding:10px 25px;
+  border:1px solid white;
+  color:white;
+  text-decoration:none;
+  letter-spacing:2px;
+  transition:0.3s;
+}
+
+.buy:hover {
+  background:white;
+  color:black;
+}
+
+/* NOTE */
+.note {
+  font-size:12px;
+  color:#777;
+  margin-top:8px;
+}
+
+/* POPUP */
+.popup {
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:black;
+  justify-content:center;
+  align-items:center;
+  z-index:99;
+}
+
+.popup img {
+  width:65%;
+}
+
+/* SOCIAL */
+.social {
+  position:fixed;
+  bottom:20px;
+  width:100%;
+  text-align:center;
+}
+
+.social img {
+  width:20px;
+  margin:0 15px;
+  opacity:0.5;
+  transition:0.3s;
+}
+
+.social img:hover {
+  opacity:1;
+  transform:scale(1.2);
+}
+</style>
+</head>
+
+<body>
+
+<div class="nav">
+  <span>UP DOWN</span>
+  <div>
+    <a href="index.html">HOME</a>
+    <a href="https://www.instagram.com/updown.clo/" target="_blank">INSTAGRAM</a>
+  </div>
+</div>
+
+<div class="products">
+
+  <div class="product">
+
+    <div class="image-wrapper">
+      <img src="black.png" onclick="openImage('black.png')">
+      <div class="overlay">VIEW</div>
+    </div>
+
+    <p>BLACK T-SHIRT</p>
+    <p class="price">30€</p>
+
+    <div class="sizes">
+      <span>S</span>
+      <span>M</span>
+      <span>L</span>
+      <span>XL</span>
+    </div>
+
+    <p class="selected">Selected size: -</p>
+
+    <a class="buy" href="https://www.instagram.com/updown.clo/" target="_blank">BUY</a>
+    <p class="note">DM us with size & product</p>
+
+  </div>
+
+  <div class="product">
+
+    <div class="image-wrapper">
+      <img src="white.png" onclick="openImage('white.png')">
+      <div class="overlay">VIEW</div>
+    </div>
+
+    <p>WHITE T-SHIRT</p>
+    <p class="price">30€</p>
+
+    <div class="sizes">
+      <span>S</span>
+      <span>M</span>
+      <span>L</span>
+      <span>XL</span>
+    </div>
+
+    <p class="selected">Selected size: -</p>
+
+    <a class="buy" href="https://www.instagram.com/updown.clo/" target="_blank">BUY</a>
+    <p class="note">DM us with size & product</p>
+
+  </div>
+
+</div>
+
+<div class="popup" id="popup" onclick="closeImage()">
+  <img id="popup-img">
+</div>
+
+<!-- SOCIAL ICONS -->
+<div class="social">
+
+  <a href="https://www.instagram.com/updown.clo/" target="_blank">
+    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png">
+  </a>
+
+  <a href="https://www.tiktok.com/@updown.clo?lang=en" target="_blank">
+    <img src="https://cdn-icons-png.flaticon.com/512/3046/3046126.png">
+  </a>
+
+</div>
+
+<script>
+function openImage(src) {
+  document.getElementById("popup").style.display = "flex";
+  document.getElementById("popup-img").src = src;
+}
+
+function closeImage() {
+  document.getElementById("popup").style.display = "none";
+}
+
+document.querySelectorAll(".sizes span").forEach(size => {
+  size.addEventListener("click", function() {
+    let container = this.parentElement;
+    let siblings = container.querySelectorAll("span");
+
+    siblings.forEach(s => s.classList.remove("active"));
+    this.classList.add("active");
+
+    let selectedText = container.parentElement.querySelector(".selected");
+    selectedText.innerText = "Selected size: " + this.innerText;
+  });
+});
+</script>
+
+</body>
+</html>
