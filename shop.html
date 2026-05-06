@@ -24,6 +24,7 @@ body {
   letter-spacing:2px;
   background:#050505;
   z-index:10;
+  box-sizing:border-box;
 }
 
 .nav a {
@@ -40,12 +41,10 @@ body {
   padding:100px 40px;
 }
 
-/* PRODUCT */
 .product {
   text-align:center;
 }
 
-/* IMAGE */
 .image-wrapper {
   position:relative;
 }
@@ -53,13 +52,13 @@ body {
 .image-wrapper img {
   width:100%;
   transition:0.3s;
+  cursor:pointer;
 }
 
 .image-wrapper img:hover {
   transform:scale(1.05);
 }
 
-/* OVERLAY */
 .overlay {
   position:absolute;
   top:50%;
@@ -75,7 +74,6 @@ body {
   opacity:1;
 }
 
-/* TEXT */
 .product p {
   margin-top:15px;
   letter-spacing:2px;
@@ -83,12 +81,9 @@ body {
 }
 
 .price {
-  margin-top:8px;
-  font-size:13px;
   color:#aaa;
 }
 
-/* SIZES */
 .sizes {
   margin-top:10px;
 }
@@ -107,14 +102,11 @@ body {
   color:black;
 }
 
-/* SELECTED */
 .selected {
-  margin-top:8px;
   font-size:11px;
   color:#aaa;
 }
 
-/* BUTTON */
 .buy {
   display:inline-block;
   margin-top:12px;
@@ -123,6 +115,7 @@ body {
   color:white;
   text-decoration:none;
   font-size:11px;
+  cursor:pointer;
 }
 
 .buy:hover {
@@ -130,14 +123,12 @@ body {
   color:black;
 }
 
-/* NOTE */
 .note {
   font-size:10px;
   color:#777;
-  margin-top:5px;
 }
 
-/* POPUP */
+/* IMAGE POPUP */
 .popup {
   display:none;
   position:fixed;
@@ -148,10 +139,67 @@ body {
   background:black;
   justify-content:center;
   align-items:center;
+  z-index:99;
 }
 
 .popup img {
   width:90%;
+}
+
+/* ORDER POPUP */
+.order-popup {
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.92);
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+}
+
+.order-box {
+  background:#111;
+  width:320px;
+  padding:35px;
+  text-align:center;
+  position:relative;
+}
+
+.order-box p {
+  white-space:pre-line;
+  line-height:1.8;
+  font-size:13px;
+  letter-spacing:1px;
+}
+
+.order-box button,
+.order-box a {
+  display:block;
+  width:100%;
+  margin-top:15px;
+  padding:12px;
+  background:none;
+  border:1px solid white;
+  color:white;
+  text-decoration:none;
+  cursor:pointer;
+  box-sizing:border-box;
+}
+
+.order-box button:hover,
+.order-box a:hover {
+  background:white;
+  color:black;
+}
+
+.close {
+  position:absolute;
+  top:10px;
+  right:15px;
+  cursor:pointer;
 }
 
 /* SOCIAL */
@@ -172,23 +220,16 @@ body {
   opacity:1;
 }
 
-/* MOBILE FIX */
+/* MOBILE */
 @media (max-width: 768px) {
-
   .products {
-    grid-template-columns: 1fr;
+    grid-template-columns:1fr;
     padding:90px 20px;
   }
 
   .nav {
-    padding:10px 15px;
     font-size:11px;
   }
-
-  .product p {
-    font-size:13px;
-  }
-
 }
 </style>
 </head>
@@ -206,7 +247,6 @@ body {
 <div class="products">
 
   <div class="product">
-
     <div class="image-wrapper">
       <img src="black.png" onclick="openImage('black.png')">
       <div class="overlay">VIEW</div>
@@ -224,13 +264,11 @@ body {
 
     <p class="selected">Selected size: -</p>
 
-    <a class="buy" href="https://www.instagram.com/updown.clo/" target="_blank">BUY</a>
-    <p class="note">DM us with size & product</p>
-
+    <a class="buy" onclick="buyProduct('BLACK T-SHIRT', '30€', this)">BUY</a>
+    <p class="note">Copy message & send us on Instagram</p>
   </div>
 
   <div class="product">
-
     <div class="image-wrapper">
       <img src="white.png" onclick="openImage('white.png')">
       <div class="overlay">VIEW</div>
@@ -248,9 +286,8 @@ body {
 
     <p class="selected">Selected size: -</p>
 
-    <a class="buy" href="https://www.instagram.com/updown.clo/" target="_blank">BUY</a>
-    <p class="note">DM us with size & product</p>
-
+    <a class="buy" onclick="buyProduct('WHITE T-SHIRT', '30€', this)">BUY</a>
+    <p class="note">Copy message & send us on Instagram</p>
   </div>
 
 </div>
@@ -259,16 +296,33 @@ body {
   <img id="popup-img">
 </div>
 
+<div class="order-popup" id="orderPopup">
+  <div class="order-box">
+    <span class="close" onclick="closeOrderPopup()">✕</span>
+
+    <p id="orderText"></p>
+
+    <button onclick="copyMessage()">COPY MESSAGE</button>
+
+    <a href="https://www.instagram.com/updown.clo/" target="_blank">
+      OPEN INSTAGRAM
+    </a>
+  </div>
+</div>
+
 <div class="social">
   <a href="https://www.instagram.com/updown.clo/" target="_blank">
     <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png">
   </a>
+
   <a href="https://www.tiktok.com/@updown.clo?lang=en" target="_blank">
     <img src="https://cdn-icons-png.flaticon.com/512/3046/3046126.png">
   </a>
 </div>
 
 <script>
+let currentMessage = "";
+
 function openImage(src) {
   document.getElementById("popup").style.display = "flex";
   document.getElementById("popup-img").src = src;
@@ -290,6 +344,35 @@ document.querySelectorAll(".sizes span").forEach(size => {
     selectedText.innerText = "Selected size: " + this.innerText;
   });
 });
+
+function buyProduct(product, price, button) {
+  let productBox = button.parentElement;
+  let selectedSize = productBox.querySelector(".selected").innerText.replace("Selected size: ", "");
+
+  if (selectedSize === "-") {
+    alert("Please select a size first.");
+    return;
+  }
+
+  currentMessage =
+`UP DOWN ORDER
+
+Product: ${product}
+Size: ${selectedSize}
+Price: ${price}`;
+
+  document.getElementById("orderText").innerText = currentMessage;
+  document.getElementById("orderPopup").style.display = "flex";
+}
+
+function copyMessage() {
+  navigator.clipboard.writeText(currentMessage);
+  alert("Message copied.");
+}
+
+function closeOrderPopup() {
+  document.getElementById("orderPopup").style.display = "none";
+}
 </script>
 
 </body>
